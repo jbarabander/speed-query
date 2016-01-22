@@ -6,7 +6,8 @@ function qStringify(params, upperParam) {
 		for(var i = 0; i < keys.length; i++) {
 			var currentKey = keys[i];
 			var currentParam = params[currentKey];
-			var newKey = upperParam ? upperParam + '[' + currentKey + ']' : currentKey;
+			var encodedCurrentKey = encodeURIComponent(currentKey);
+			var newKey = upperParam ? upperParam + '[' + encodedCurrentKey + ']' : encodedCurrentKey;
 			//serves as a way of getting the nested key string
 			switch(typeof currentParam) {
 				case 'object':
@@ -40,21 +41,22 @@ function qSerialize(str) {
 		});
 		var value = keyAndValue[1];
 		if(keys.length === 1) {
-			query[keys[0]] = decodeURIComponent(value);
+			query[decodeURIComponent(keys[0])] = decodeURIComponent(value);
 		} else {
 			var currentObj = query;
 			for(var j = 0; j < keys.length - 1; j++) {
 				var currentKey = keys[j];
+				var decodedCurrentKey = decodeURIComponent(currentKey)
 				// if(j !== 0) {
 				// 	currentKey = currentKey.slice(0, currentKey.length - 1);
 				// 	console.log(currentKey);
 				// }
-				if(!currentObj[currentKey]) {
-					currentObj[currentKey] = {};
+				if(!currentObj[decodedCurrentKey]) {
+					currentObj[decodedCurrentKey] = {};
 				}
-				currentObj = currentObj[currentKey];
+				currentObj = currentObj[decodedCurrentKey];
 			}
-			currentObj[keys[keys.length - 1]] = decodeURIComponent(value);
+			currentObj[decodeURIComponent(keys[keys.length - 1])] = decodeURIComponent(value);
 		}
 	}
 	return query;

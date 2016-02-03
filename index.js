@@ -1,4 +1,17 @@
-function qStringify(params, upperParam) {
+(function() {
+	'use strict';
+	
+	if(module && module.exports) {
+		module.exports = {
+			stringify: stringify,
+			serialize: serialize
+
+		}
+	} else if(window) {
+		window.queryStringify = stringify;
+		window.querySerialize = serialize;
+	}
+	function stringify(params, upperParam) {
 		var paramsArr = [];
 		if(!params) return '';
 			var keys = Object.keys(params);
@@ -18,13 +31,16 @@ function qStringify(params, upperParam) {
 			case 'string':
 				stringifiedParam = newKey + '=' + encodeURIComponent(currentParam);
 				break;
+			default:
+				stringifiedParam = newKey + '=' + currentParam;
+				break;
 			}
 			paramsArr.push(stringifiedParam);
 		}
 		return paramsArr.join('&');
 }
 
-function qSerialize(str) {
+function serialize(str) {
 	var splitQuery = str.split('&');
 	// console.log(splitQuery);
 	var query = {};
@@ -45,8 +61,7 @@ function qSerialize(str) {
 		} else {
 			var currentObj = query;
 			for(var j = 0; j < keys.length - 1; j++) {
-				var currentKey = keys[j];
-				var decodedCurrentKey = decodeURIComponent(currentKey)
+				var decodedCurrentKey = decodeURIComponent(keys[j]);
 				// if(j !== 0) {
 				// 	currentKey = currentKey.slice(0, currentKey.length - 1);
 				// 	console.log(currentKey);
@@ -61,3 +76,4 @@ function qSerialize(str) {
 	}
 	return query;
 }
+})()

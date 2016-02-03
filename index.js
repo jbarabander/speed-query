@@ -1,12 +1,17 @@
 (function() {
+	'use strict';
+	
 	if(module && module.exports) {
 		module.exports = {
-			stringify: qStringify,
+			stringify: stringify,
+			serialize: serialize
 
 		}
+	} else if(window) {
+		window.queryStringify = stringify;
+		window.querySerialize = serialize;
 	}
-})()
-function qStringify(params, upperParam) {
+	function stringify(params, upperParam) {
 		var paramsArr = [];
 		if(!params) return '';
 			var keys = Object.keys(params);
@@ -35,7 +40,7 @@ function qStringify(params, upperParam) {
 		return paramsArr.join('&');
 }
 
-function qSerialize(str) {
+function serialize(str) {
 	var splitQuery = str.split('&');
 	// console.log(splitQuery);
 	var query = {};
@@ -71,3 +76,4 @@ function qSerialize(str) {
 	}
 	return query;
 }
+})()

@@ -1,3 +1,11 @@
+(function() {
+	if(module && module.exports) {
+		module.exports = {
+			stringify: qStringify,
+
+		}
+	}
+})()
 function qStringify(params, upperParam) {
 		var paramsArr = [];
 		if(!params) return '';
@@ -17,6 +25,9 @@ function qStringify(params, upperParam) {
 				break;
 			case 'string':
 				stringifiedParam = newKey + '=' + encodeURIComponent(currentParam);
+				break;
+			default:
+				stringifiedParam = newKey + '=' + currentParam;
 				break;
 			}
 			paramsArr.push(stringifiedParam);
@@ -45,8 +56,7 @@ function qSerialize(str) {
 		} else {
 			var currentObj = query;
 			for(var j = 0; j < keys.length - 1; j++) {
-				var currentKey = keys[j];
-				var decodedCurrentKey = decodeURIComponent(currentKey)
+				var decodedCurrentKey = decodeURIComponent(keys[j]);
 				// if(j !== 0) {
 				// 	currentKey = currentKey.slice(0, currentKey.length - 1);
 				// 	console.log(currentKey);

@@ -59,19 +59,15 @@
                 }
             });
             var value = keyAndValue[1];
-            if (keys.length === 1) {
-                query[decodeURIComponent(keys[0])] = convertToCorrectType(decodeURIComponent(value));
-            } else {
-                var currentObj = query;
-                for (var j = 0; j < keys.length - 1; j++) {
-                    var decodedCurrentKey = decodeURIComponent(keys[j]);
-                    if (!currentObj[decodedCurrentKey]) {
-                        currentObj[decodedCurrentKey] = {};
-                    }
-                    currentObj = currentObj[decodedCurrentKey];
+            var currentObj = query;
+            for (var j = 0; j < keys.length - 1; j++) {
+                var decodedCurrentKey = decodeURIComponent(keys[j]);
+                if (!currentObj[decodedCurrentKey]) {
+                    currentObj[decodedCurrentKey] = {};
                 }
-                currentObj[decodeURIComponent(keys[keys.length - 1])] = convertToCorrectType(decodeURIComponent(value));
+                currentObj = currentObj[decodedCurrentKey];
             }
+            currentObj[decodeURIComponent(keys[keys.length - 1])] = convertToCorrectType(decodeURIComponent(value));
         }
         return query;
     }

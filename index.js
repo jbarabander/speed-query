@@ -1,5 +1,19 @@
 (function () {
     'use strict';
+    var numberRegex = /^(\d*\.)?\d+$/;
+    function convertToCorrectType(str) {
+        if (numberRegex.test(str)) {
+            return parseFloat(str);
+        }
+        if(str === 'false') {
+            return false;
+        } 
+        if(str === 'true') {
+            return true;
+        }
+        return str;
+    }
+
     function qStringify(params, upperParam) {
         var paramsArr = [];
         if (!params) return '';
@@ -32,7 +46,6 @@
 
     function qSerialize(str) {
         var splitQuery = str.split('&');
-        // console.log(splitQuery);
         var query = {};
         var priorParameter;
         for (var i = 0; i < splitQuery.length; i++) {
@@ -46,23 +59,15 @@
                 }
             });
             var value = keyAndValue[1];
-            if (keys.length === 1) {
-                query[decodeURIComponent(keys[0])] = decodeURIComponent(value);
-            } else {
-                var currentObj = query;
-                for (var j = 0; j < keys.length - 1; j++) {
-                    var decodedCurrentKey = decodeURIComponent(keys[j]);
-                    // if(j !== 0) {
-                    // 	currentKey = currentKey.slice(0, currentKey.length - 1);
-                    // 	console.log(currentKey);
-                    // }
-                    if (!currentObj[decodedCurrentKey]) {
-                        currentObj[decodedCurrentKey] = {};
-                    }
-                    currentObj = currentObj[decodedCurrentKey];
+            var currentObj = query;
+            for (var j = 0; j < keys.length - 1; j++) {
+                var decodedCurrentKey = decodeURIComponent(keys[j]);
+                if (!currentObj[decodedCurrentKey]) {
+                    currentObj[decodedCurrentKey] = {};
                 }
-                currentObj[decodeURIComponent(keys[keys.length - 1])] = decodeURIComponent(value);
+                currentObj = currentObj[decodedCurrentKey];
             }
+            currentObj[decodeURIComponent(keys[keys.length - 1])] = convertToCorrectType(decodeURIComponent(value));
         }
         return query;
     }
